@@ -1,0 +1,48 @@
+#root, .ant-layout {
+  height: 100%;
+  background: #ffffff;
+}
+
+.ant-layout-content {
+  display: flex;
+  flex-direction: column;
+}
+.site-layout-content {
+  flex-grow: 1;
+  min-height: 280px;
+  background: #fff;
+}
+
+.ant-layout-header {
+  padding: 0 30px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px #f0f1f2;
+}
+.ant-layout-header .logo {
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  color: #1890ff;
+  background: rgba(255, 255, 255, 0);
+  font-size: 1.75rem;
+}
+.ant-row-rtl .ant-layout-header .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+.ant-layout-header a {
+  color: #000;
+  font-size: 1.25rem;
+}
+
+.ant-layout-header a:hover {
+  color: #1890ff;
+}
+
+.ant-layout-footer {
+  padding: 15px;
+}
