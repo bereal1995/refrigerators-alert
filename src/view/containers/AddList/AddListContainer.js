@@ -57,7 +57,7 @@ function AddListContainer() {
         newData.splice(index, 1, { ...item, ...row });
         setData(newData);
         dispatch(addListActions.updateAddListItem({
-            userUid: user.uid,
+            userUid: user?.uid ? user.uid : 'guest',
             key: Object.keys(list).find(key => list[key] === item),
             path: 'name',
             data: newData[index].name
@@ -143,7 +143,7 @@ function AddListContainer() {
         onChange: (selectedRowKeys, selectedRows) => {
             dispatch(addListActions.moveAddListItems({
                 items: selectedRows,
-                userUid: user.uid,
+                userUid: user?.uid ? user.uid : 'guest',
             }))
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
@@ -157,7 +157,7 @@ function AddListContainer() {
         for(let item of data) {
             if (item.key === key) {
                 return dispatch(addListActions.updateAddListItem({
-                    userUid: user.uid,
+                    userUid: user?.uid ? user.uid : 'guest',
                     key: Object.keys(list).find(key => list[key] === item),
                     path: 'expire',
                     data: date.format()
@@ -168,7 +168,7 @@ function AddListContainer() {
 
     const handleDelete = (item) => {
         dispatch(addListActions.updateAddListItem({
-            userUid: user.uid,
+            userUid: user?.uid ? user.uid : 'guest',
             key: Object.keys(list).find(key => list[key] === item),
             path: '',
             data: null,
@@ -185,17 +185,11 @@ function AddListContainer() {
         dispatch(addListActions.createAddList({
             key: uuid(),
             name: name,
-            userUid: user.uid,
+            userUid: user?.uid ? user.uid : 'guest',
         }))
 
         setWord('');
     }
-
-    useEffect(() => {
-        if (user?.uid) {
-            dispatch(addListActions.listenAddList(user.uid));
-        }
-    }, [user])
 
     useEffect(() => {
         if (list) {
@@ -208,7 +202,7 @@ function AddListContainer() {
     return (
       <>
           <Search
-            placeholder="추가할 이름을 입력해 주세요"
+            placeholder="이름을 입력해 주세요"
             enterButton={<HighlightOutlined />}
             onSearch={onCreate}
             onChange={onChange}

@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar, Col, Dropdown, Menu, Row} from "antd";
+import {Avatar, Badge, Col, Dropdown, Menu, Row} from "antd";
 import {Header} from "antd/es/layout/layout";
 import {FormOutlined, HomeOutlined, UnorderedListOutlined, UserOutlined} from '@ant-design/icons';
 import {CgSmartHomeRefrigerator} from 'react-icons/cg'
@@ -8,12 +8,14 @@ import {PATH_ADD_LIST, PATH_HOME, PATH_ITEM_LIST} from "../../../constants/Const
 import {useDispatch, useSelector} from "react-redux";
 import {stateApp} from "../../../redux/app/appSlice";
 import actionsApp from "../../../redux/app/appActions";
+import {stateItemList} from "../../../redux/itemList/itemListSlice";
 
 function HeaderBox() {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
     const user = {...useSelector(stateApp)}.user;
+    const list = {...useSelector(stateItemList)}.list;
 
     const signIn = () => dispatch(actionsApp.appLogin());
     const signOut = () => dispatch(actionsApp.appLogout());
@@ -23,13 +25,9 @@ function HeaderBox() {
         <Menu.Item key={'login'} onClick={user ? signOut : signIn}>
           {user ? 'Logout' : 'Login'}
         </Menu.Item>
-        {
-          user && (
-            <Menu.Item key={'hello'}>
-              Hello {user.displayName}!
-            </Menu.Item>
-          )
-        }
+        <Menu.Item key={'hello'}>
+          Hello {user ? user.displayName : 'guest'}!
+        </Menu.Item>
       </Menu>
     );
 
@@ -52,7 +50,9 @@ function HeaderBox() {
                 <FormOutlined style={{fontSize: '1.25rem'}} />
               </Menu.Item>
               <Menu.Item key={PATH_ITEM_LIST}>
-                <UnorderedListOutlined style={{fontSize: '1.25rem'}} />
+                <Badge count={list && Object.keys(list).length}>
+                  <UnorderedListOutlined style={{fontSize: '1.25rem'}} />
+                </Badge>
               </Menu.Item>
             </Menu>
           </Col>
