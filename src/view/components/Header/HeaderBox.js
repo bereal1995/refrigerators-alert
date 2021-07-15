@@ -52,7 +52,7 @@ function HeaderBox() {
           </Col>
           <Col>
             <Dropdown overlay={userMenu} trigger={["click"]}>
-              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()} href="#">
                 <Avatar size={"large"} icon={<UserOutlined />} />
               </a>
             </Dropdown>

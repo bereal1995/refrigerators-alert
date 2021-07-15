@@ -1,7 +1,6 @@
 import Routes from "./routes/Routes";
 import {Layout} from 'antd';
 import HeaderBox from "./components/Header/HeaderBox";
-import BreadCrumb from "./components/BreadCrumb/BreadCrumb";
 import FooterBox from "./components/Footer/FooterBox";
 import {Content} from "antd/es/layout/layout";
 
