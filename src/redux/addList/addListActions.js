@@ -19,6 +19,23 @@ const actions = {
   },
   updateAddListItem: payload => (dispatch) => {
     fireDatabase.ref(`addList/${payload.userUid}/${payload.key}/${payload.path}`).set(payload.data);
+  },
+  moveAddListItems: payload => (dispatch) => {
+    for(let item of payload.items) {
+      let list;
+      fireDatabase.ref(`addList/${payload.userUid}`).get().then((snapshot) => {
+        if (snapshot.exists()) {
+          list = snapshot.val();
+          let key = Object.keys(list).find(key => list[key].key === item.key);
+          fireDatabase.ref(`itemList/${payload.userUid}`).push(item);
+          fireDatabase.ref(`addList/${payload.userUid}/${key}`).remove();
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
   }
 };
 

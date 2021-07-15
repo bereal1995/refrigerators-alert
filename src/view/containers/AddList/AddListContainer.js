@@ -14,7 +14,7 @@ function AddListContainer() {
     const user = {...useSelector(stateApp)}.user;
     const list = {...useSelector(stateAddList)}.list;
     const [word, setWord] = useState('');
-    const [data, setData] = useState(Object.values(list));
+    const [data, setData] = useState([]);
     const EditableCell = ({editing, dataIndex, title, inputType, record, index, children, ...restProps}) => {
         const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
         return (
@@ -116,7 +116,7 @@ function AddListContainer() {
             dataIndex: 'delete',
             render: (_, record) =>
               data.length >= 1 ? (
-                <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record)}>
                     <Button><DeleteOutlined /></Button>
                 </Popconfirm>
               ) : null,
@@ -141,6 +141,10 @@ function AddListContainer() {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
+            dispatch(addListActions.moveAddListItems({
+                items: selectedRows,
+                userUid: user.uid,
+            }))
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
         getCheckboxProps: (record) => ({
@@ -150,21 +154,25 @@ function AddListContainer() {
     };
 
     const onChangeDate = (date, dateString, key) => {
-        setData(data.map(item => {
+        for(let item of data) {
             if (item.key === key) {
-                dispatch(addListActions.updateAddListItem({
+                return dispatch(addListActions.updateAddListItem({
                     userUid: user.uid,
                     key: Object.keys(list).find(key => list[key] === item),
                     path: 'expire',
                     data: date.format()
                 }))
             }
-            return item
-        }));
+        }
     }
 
-    const handleDelete = (key) => {
-        setData(data.filter(item => item.key !== key));
+    const handleDelete = (item) => {
+        dispatch(addListActions.updateAddListItem({
+            userUid: user.uid,
+            key: Object.keys(list).find(key => list[key] === item),
+            path: '',
+            data: null,
+        }))
     };
 
     const onChange = (e) => {
@@ -180,27 +188,21 @@ function AddListContainer() {
             userUid: user.uid,
         }))
 
-        setData([
-            ...data,
-            {
-                key: data.length + 2,
-                name: name,
-                enter: moment().format('YYYY-MM-DD'),
-                expire: moment(),
-            },
-        ]);
-
         setWord('');
     }
 
     useEffect(() => {
         if (user?.uid) {
-            dispatch(addListActions.listenAddList(user.uid))
+            dispatch(addListActions.listenAddList(user.uid));
         }
     }, [user])
 
     useEffect(() => {
-        setData(Object.values(list))
+        if (list) {
+            setData(Object.values(list));
+        } else {
+            setData([]);
+        }
     }, [list])
 
     return (
