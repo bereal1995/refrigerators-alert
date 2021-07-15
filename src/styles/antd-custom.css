@@ -46,3 +46,16 @@
 .ant-layout-footer {
   padding: 15px;
 }
+
+.home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.home h1 {
+  color: #1890ff;
+  font-size: 30px;
+}

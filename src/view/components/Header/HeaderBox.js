@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Dropdown, Menu, Row} from "antd";
+import {Avatar, Col, Dropdown, Menu, Row} from "antd";
 import {Header} from "antd/es/layout/layout";
 import {HomeOutlined, UnorderedListOutlined, FormOutlined, UserOutlined} from '@ant-design/icons';
 import {CgSmartHomeRefrigerator} from 'react-icons/cg'
@@ -53,7 +53,7 @@ function HeaderBox() {
           <Col>
             <Dropdown overlay={userMenu} trigger={["click"]}>
               <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                <UserOutlined />
+                <Avatar size={"large"} icon={<UserOutlined />} />
               </a>
             </Dropdown>
           </Col>
