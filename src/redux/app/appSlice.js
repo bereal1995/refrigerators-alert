@@ -3,12 +3,15 @@ import {createSlice} from '@reduxjs/toolkit';
 export const appSlice = createSlice({
   name: 'app',
   initialState: {
-    loading: false,
+    user: null,
   },
   reducers: {
-    appLoading: (state, action) => {
-      state.loading = action.payload;
-    }
+    appLogin: (state, action) => {
+      state.user = action.payload;
+    },
+    appLogout: (state, action) => {
+      state.user = null;
+    },
   }
 });
 

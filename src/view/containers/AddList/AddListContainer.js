@@ -3,29 +3,18 @@ import Search from "antd/es/input/Search";
 import {DeleteOutlined, HighlightOutlined} from "@ant-design/icons";
 import {Button, DatePicker, Form, Input, InputNumber, Popconfirm, Table, Typography} from "antd";
 import moment from "moment";
+import {useDispatch, useSelector} from "react-redux";
+import addListActions from "../../../redux/addList/addListActions";
+import {stateApp} from "../../../redux/app/appSlice";
+import uuid from "react-uuid";
+import {stateAddList} from "../../../redux/addList/addListSlice";
 
 function AddListContainer() {
+    const dispatch = useDispatch();
+    const user = {...useSelector(stateApp)}.user;
+    const list = {...useSelector(stateAddList)}.list;
     const [word, setWord] = useState('');
-    const [data, setData] = useState([
-        {
-            key: '1',
-            name: 'John Brown',
-            enter: moment().format('YYYY-MM-DD'),
-            expire: moment(),
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            enter: moment().format('YYYY-MM-DD'),
-            expire: moment(),
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            enter: moment().format('YYYY-MM-DD'),
-            expire: moment(),
-        },
-    ]);
+    const [data, setData] = useState(Object.values(list));
     const EditableCell = ({editing, dataIndex, title, inputType, record, index, children, ...restProps}) => {
         const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
         return (
@@ -60,24 +49,20 @@ function AddListContainer() {
         setEditingKey('');
     };
     const save = async (key) => {
-        try {
-            const row = await form.validateFields();
-            const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
+        const row = await form.validateFields();
+        const newData = [...data];
+        const index = newData.findIndex((item) => key === item.key);
 
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
-            }
-        } catch (errInfo) {
-            console.log('Validate Failed:', errInfo);
-        }
+        const item = newData[index];
+        newData.splice(index, 1, { ...item, ...row });
+        setData(newData);
+        dispatch(addListActions.updateAddListItem({
+            userUid: user.uid,
+            key: Object.keys(list).find(key => list[key] === item),
+            path: 'name',
+            data: newData[index].name
+        }))
+        setEditingKey('');
     };
 
     const columns = [
@@ -98,7 +83,7 @@ function AddListContainer() {
             render: (_, record) =>
               <DatePicker
                 onChange={(date, dateString) => onChangeDate(date, dateString, record.key)}
-                defaultValue={record.expire}
+                defaultValue={moment(record.expire)}
               />
             ,
             sorter: (a, b) => moment(a.expire) - moment(b.expire),
@@ -167,7 +152,12 @@ function AddListContainer() {
     const onChangeDate = (date, dateString, key) => {
         setData(data.map(item => {
             if (item.key === key) {
-                item.expire = date
+                dispatch(addListActions.updateAddListItem({
+                    userUid: user.uid,
+                    key: Object.keys(list).find(key => list[key] === item),
+                    path: 'expire',
+                    data: date.format()
+                }))
             }
             return item
         }));
@@ -184,6 +174,12 @@ function AddListContainer() {
     const onCreate = (name) => {
         if (!name) return;
 
+        dispatch(addListActions.createAddList({
+            key: uuid(),
+            name: name,
+            userUid: user.uid,
+        }))
+
         setData([
             ...data,
             {
@@ -198,8 +194,14 @@ function AddListContainer() {
     }
 
     useEffect(() => {
-        console.log('data',data);
-    }, [data])
+        if (user?.uid) {
+            dispatch(addListActions.listenAddList(user.uid))
+        }
+    }, [user])
+
+    useEffect(() => {
+        setData(Object.values(list))
+    }, [list])
 
     return (
       <>
