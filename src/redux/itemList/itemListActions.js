@@ -8,6 +8,9 @@ const actions = {
       dispatch(actionsItemList.listenItemList(data.val()));
     });
   },
+  updateItemList: payload => (dispatch) => {
+    fireDatabase.ref(`itemList/${payload.userUid}/${payload.key}/${payload.path}`).set(payload.data);
+  },
 };
 
 export default actions;

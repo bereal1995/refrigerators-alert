@@ -145,7 +145,6 @@ function AddListContainer() {
                 items: selectedRows,
                 userUid: user?.uid ? user.uid : 'guest',
             }))
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
         getCheckboxProps: (record) => ({
             disabled: record.name === 'Disabled User',

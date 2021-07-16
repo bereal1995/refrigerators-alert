@@ -9,6 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {stateApp} from "../../../redux/app/appSlice";
 import actionsApp from "../../../redux/app/appActions";
 import {stateItemList} from "../../../redux/itemList/itemListSlice";
+import moment from "moment";
 
 function HeaderBox() {
     const location = useLocation();
@@ -19,6 +20,17 @@ function HeaderBox() {
 
     const signIn = () => dispatch(actionsApp.appLogin());
     const signOut = () => dispatch(actionsApp.appLogout());
+    const onClickMenu = (e) => history.push(e.key);
+
+    const getListCount = (list) => {
+      let count = 0;
+
+      for(let item of Object.values(list)) {
+        if (moment(item.expire).valueOf() < moment().valueOf()) count++;
+      }
+
+      return count
+    }
 
     const userMenu = (
       <Menu>
@@ -30,10 +42,6 @@ function HeaderBox() {
         </Menu.Item>
       </Menu>
     );
-
-    const onClickMenu = (e) => {
-      history.push(e.key);
-    }
 
     return (
       <Header>
@@ -50,7 +58,7 @@ function HeaderBox() {
                 <FormOutlined style={{fontSize: '1.25rem'}} />
               </Menu.Item>
               <Menu.Item key={PATH_ITEM_LIST}>
-                <Badge count={list && Object.keys(list).length}>
+                <Badge count={<span className={'ant-badge-count'}>{list && getListCount(list)}</span>}>
                   <UnorderedListOutlined style={{fontSize: '1.25rem'}} />
                 </Badge>
               </Menu.Item>

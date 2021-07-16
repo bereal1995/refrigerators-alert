@@ -29,7 +29,7 @@ function App() {
       dispatch(addListActions.listenAddList('guest'));
       dispatch(itemListActions.listenItemList('guest'));
     }
-  }, [user])
+  }, [user, dispatch])
 
   return (
     <>

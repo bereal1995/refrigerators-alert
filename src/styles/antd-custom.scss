@@ -27,6 +27,13 @@ $PRIMARY_COLOR: #007bff;
     }
   }
 }
+
+.ant-menu-item-active {
+  svg {
+    color: $PRIMARY_COLOR;
+  }
+}
+
 .ant-layout-header .logo {
   float: left;
   display: flex;
@@ -70,4 +77,11 @@ $PRIMARY_COLOR: #007bff;
 
 .ant-input-search {
   margin-bottom: 20px;
+}
+
+.ant-table table {
+  tr.row-expired-active > td, tr.row-expired-active:hover > td {
+    background: #fff2e8;
+    opacity: .6;
+  }
 }
