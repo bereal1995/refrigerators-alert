@@ -8,7 +8,7 @@ const actions = {
       key: payload.key,
       name: payload.name,
       enter: moment().format('YYYY-MM-DD'),
-      expire: moment().format(),
+      expire: moment().add('10', 'days').format(),
     })
   },
   listenAddList: payload => (dispatch) => {
