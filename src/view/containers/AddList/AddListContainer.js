@@ -4,17 +4,18 @@ import {DeleteOutlined, HighlightOutlined} from "@ant-design/icons";
 import {Button, DatePicker, Form, Input, InputNumber, Popconfirm, Table, Typography} from "antd";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
-import addListActions from "../../../redux/addList/addListActions";
+import actionsProduct from "../../../redux/product/productActions";
 import {stateApp} from "../../../redux/app/appSlice";
 import uuid from "react-uuid";
-import {stateAddList} from "../../../redux/addList/addListSlice";
+import {stateProduct} from "../../../redux/product/productSlice";
 
 function AddListContainer() {
     const dispatch = useDispatch();
     const user = {...useSelector(stateApp)}.user;
-    const list = {...useSelector(stateAddList)}.list;
+    const list = {...useSelector(stateProduct)}.addList;
     const [word, setWord] = useState('');
     const [data, setData] = useState([]);
+    const listType = 'addList';
     const EditableCell = ({editing, dataIndex, title, inputType, record, index, children, ...restProps}) => {
         const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
         return (
@@ -56,11 +57,12 @@ function AddListContainer() {
         const item = newData[index];
         newData.splice(index, 1, { ...item, ...row });
         setData(newData);
-        dispatch(addListActions.updateAddListItem({
+        dispatch(actionsProduct.updateListItem({
             userUid: user?.uid ? user.uid : 'guest',
             key: Object.keys(list).find(key => list[key] === item),
             path: 'name',
-            data: newData[index].name
+            data: newData[index].name,
+            listType,
         }))
         setEditingKey('');
     };
@@ -141,7 +143,7 @@ function AddListContainer() {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            dispatch(addListActions.moveAddListItems({
+            dispatch(actionsProduct.moveAddListItems({
                 items: selectedRows,
                 userUid: user?.uid ? user.uid : 'guest',
             }))
@@ -155,22 +157,24 @@ function AddListContainer() {
     const onChangeDate = (date, dateString, key) => {
         for(let item of data) {
             if (item.key === key) {
-                return dispatch(addListActions.updateAddListItem({
+                return dispatch(actionsProduct.updateListItem({
                     userUid: user?.uid ? user.uid : 'guest',
                     key: Object.keys(list).find(key => list[key] === item),
                     path: 'expire',
-                    data: date.format()
+                    data: date.format(),
+                    listType
                 }))
             }
         }
     }
 
     const handleDelete = (item) => {
-        dispatch(addListActions.updateAddListItem({
+        dispatch(actionsProduct.updateAddListItem({
             userUid: user?.uid ? user.uid : 'guest',
             key: Object.keys(list).find(key => list[key] === item),
             path: '',
             data: null,
+            listType
         }))
     };
 
@@ -181,10 +185,11 @@ function AddListContainer() {
     const onCreate = (name) => {
         if (!name) return;
 
-        dispatch(addListActions.createAddList({
+        dispatch(actionsProduct.createListItem({
             key: uuid(),
             name: name,
             userUid: user?.uid ? user.uid : 'guest',
+            listType
         }))
 
         setWord('');

@@ -5,18 +5,19 @@ import {Button, DatePicker, Form, Input, InputNumber, Popconfirm, Table, Typogra
 import moment from "moment";
 import {DeleteOutlined} from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import {stateItemList} from "../../../redux/itemList/itemListSlice";
-import itemListActions from "../../../redux/itemList/itemListActions";
 import {useHistory} from "react-router";
 import {PATH_ITEM_LIST} from "../../../constants/ConstantsPath";
+import {stateProduct} from "../../../redux/product/productSlice";
+import actionsProduct from "../../../redux/product/productActions";
 
 function ItemListContainer() {
     const dispatch = useDispatch();
     const history = useHistory();
     const user = {...useSelector(stateApp)}.user;
-    const list = {...useSelector(stateItemList)}.list;
+    const list = {...useSelector(stateProduct)}.itemList;
     const [word, setWord] = useState('');
     const [data, setData] = useState([]);
+    const listType = 'itemList';
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
     const columns = [
@@ -25,6 +26,7 @@ function ItemListContainer() {
             dataIndex: 'name',
             sorter: (a, b) => ( a.name < b.name ) ? -1 : ( a.name === b.name ) ? 0 : 1,
             editable: true,
+            fixed: 'left',
         },
         {
             title: 'Enter',
@@ -77,8 +79,6 @@ function ItemListContainer() {
         },
     ];
 
-    const expiredItems = list;
-
     const EditableCell = ({editing, dataIndex, title, inputType, record, index, children, ...restProps}) => {
         const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
         return (
@@ -119,11 +119,12 @@ function ItemListContainer() {
         const item = newData[index];
         newData.splice(index, 1, { ...item, ...row });
         setData(newData);
-        dispatch(itemListActions.updateItemList({
+        dispatch(actionsProduct.updateListItem({
             userUid: user?.uid ? user.uid : 'guest',
             key: Object.keys(list).find(key => list[key] === item),
             path: 'name',
-            data: newData[index].name
+            data: newData[index].name,
+            listType
         }))
         setEditingKey('');
     };
@@ -148,22 +149,24 @@ function ItemListContainer() {
     const onChangeDate = (date, dateString, key) => {
         for(let item of data) {
             if (item.key === key) {
-                return dispatch(itemListActions.updateItemList({
+                return dispatch(actionsProduct.updateListItem({
                     userUid: user?.uid ? user.uid : 'guest',
                     key: Object.keys(list).find(key => list[key] === item),
                     path: 'expire',
-                    data: date.format()
+                    data: date.format(),
+                    listType
                 }))
             }
         }
     }
 
     const handleDelete = (item) => {
-        dispatch(itemListActions.updateItemList({
+        dispatch(actionsProduct.updateListItem({
             userUid: user?.uid ? user.uid : 'guest',
             key: Object.keys(list).find(key => list[key] === item),
             path: '',
             data: null,
+            listType
         }))
     };
 
@@ -182,9 +185,6 @@ function ItemListContainer() {
     }
 
     const addExpiredClass = (record, index) => {
-        console.log('record',record);
-        console.log('index',index);
-
         if(moment(record.expire).valueOf() < moment().valueOf()) return 'row-expired-active'
     }
 
@@ -216,6 +216,7 @@ function ItemListContainer() {
                 rowClassName={addExpiredClass}
                 columns={mergedColumns}
                 dataSource={data}
+                scroll={{ x: true }}
               />
           </Form>
       </>

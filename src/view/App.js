@@ -7,9 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import actionsApp from "../redux/app/appActions"
 import {auth} from "../lib/firebase";
 import {useEffect} from "react";
-import addListActions from "../redux/addList/addListActions";
+import productActions from "../redux/product/productActions";
 import {stateApp} from "../redux/app/appSlice";
-import itemListActions from "../redux/itemList/itemListActions";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,11 +22,9 @@ function App() {
 
   useEffect(() => {
     if (user?.uid) {
-      dispatch(addListActions.listenAddList(user.uid));
-      dispatch(itemListActions.listenItemList(user.uid));
+      dispatch(productActions.listenList(user.uid));
     } else {
-      dispatch(addListActions.listenAddList('guest'));
-      dispatch(itemListActions.listenItemList('guest'));
+      dispatch(productActions.listenList('guest'));
     }
   }, [user, dispatch])
 

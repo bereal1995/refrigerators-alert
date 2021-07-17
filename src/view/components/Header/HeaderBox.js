@@ -8,15 +8,15 @@ import {PATH_ADD_LIST, PATH_HOME, PATH_ITEM_LIST} from "../../../constants/Const
 import {useDispatch, useSelector} from "react-redux";
 import {stateApp} from "../../../redux/app/appSlice";
 import actionsApp from "../../../redux/app/appActions";
-import {stateItemList} from "../../../redux/itemList/itemListSlice";
 import moment from "moment";
+import {stateProduct} from "../../../redux/product/productSlice";
 
 function HeaderBox() {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch();
     const user = {...useSelector(stateApp)}.user;
-    const list = {...useSelector(stateItemList)}.list;
+    const list = {...useSelector(stateProduct)}.itemList;
 
     const signIn = () => dispatch(actionsApp.appLogin());
     const signOut = () => dispatch(actionsApp.appLogout());
