@@ -98,6 +98,49 @@ yarn start
 ## 프로젝트 만들면서..
 https://bereal1995.github.io/sideproject/refiregerators-alert/
 
+### 구글 로그인
+```javascript
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            dispatch(actionsApp.appLogin(user));
+          } else {
+            auth.signInWithPopup(provider)
+          }
+        })
+      })
+      .catch(err => console.log('err',err))
+```
+- 기존에 session으로 저장했었지만 현재 세션이나 탭에서 유지되다보니 다시 로그인 하는게 불편하여 local에 저장하는 방식으로 수정했습니다.
+
+### 리얼타임 데이터베이스
+```javascript
+const action = {
+  create: payload => (dispatch) => {
+    // 해당 데이터 위치의 참조에 데이터 추가
+    fireDatabase.ref([dataUrl]).push([payload.datas])
+  },
+  read: userUid => (dispatch) => {
+    fireDatabase.ref([dataUrl]).on('value', data => {
+      // 데이터 변화가 생기면 전달받은 데이터값으로 액션을 보내 스토어에 저장
+      dispatch(actionsProduct.listenProduct(data.val()));
+    });
+  },
+  update: payload => (dispatch) => {
+    // 해당 데이터 위치의 참조에 데이터 수정
+    fireDatabase.ref([dataUrl]).set([payload.datas]);
+  },
+  delete: payload => (dispatch) => {
+    // 해당 데이터 위치의 참조에 데이터 삭제
+    fireDatabase.ref([dataUrl]).remove();
+  }
+}
+```
+- 기본적으로 위에 형식으로 CRUD를 구현하였습니다.
+- read함수로 데이터 변화를 감지하여 데이터를 최산화 하고
+- create, update, delete를 이용하여 데이터를 수정했습니다.
 
 ## 저작권 및 사용자 정보
 © 2021 HH gygud98@gmail.com
