@@ -73,6 +73,7 @@ function AddListContainer() {
             dataIndex: 'name',
             sorter: (a, b) => ( a.name < b.name ) ? -1 : ( a.name === b.name ) ? 0 : 1,
             editable: true,
+            fixed: 'left',
         },
         {
             title: 'Enter',
@@ -229,6 +230,7 @@ function AddListContainer() {
                 }}
                 columns={mergedColumns}
                 dataSource={data}
+                scroll={{ x: true }}
               />
           </Form>
       </>

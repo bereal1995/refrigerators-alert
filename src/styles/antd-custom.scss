@@ -80,6 +80,7 @@ $PRIMARY_COLOR: #007bff;
 }
 
 .ant-table table {
+  min-width: 600px !important;
   tr.row-expired-active > td, tr.row-expired-active:hover > td {
     background: #fff2e8;
     opacity: .6;
