@@ -9,7 +9,7 @@ https://refrigerators-alert.web.app/
   냉장고 관리를 할 수 있는 웹 어플케이션을 만들어 냉장고 관리를 해보자!
 ### 간단한 기술스택
 - react, redux
-- redux-thunk (리덕스 미들웨어, 외부 통)
+- redux-thunk (리덕스 미들웨어, 외부 통신)
 - dotenv (환경변수 관리)
 - firebase (데이터베이스 및 배포)
 - react-uuid (제품 고유의 키값 생성하기 위해 사용)
@@ -63,8 +63,8 @@ https://refrigerators-alert.web.app/
 │           └── Routes.js
 └── yarn.lock
 ```
-- 기본적으로 container에서 props를 가져오고 component로 전달하는식으로 만들었다.
-- 서버와 통신하는 부분은 redux-thunk를 통해 state를 업데이트 하는 방식으로 만들었다.
+- 기본적으로 container에서 props를 가져오고 component로 전달하는식으로 만들었습니다.
+- 서버와 통신하는 부분은 redux-thunk를 통해 state를 업데이트 하는 방식으로 만들었습니다.
 ## 프로젝트 설치방법
 ```sh
 # 프로젝트 설치
