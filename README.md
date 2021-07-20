@@ -7,13 +7,24 @@ https://refrigerators-alert.web.app/
 ### 목표
 - 집에서 냉장고 관리가 제대로 되지않아 버리게 되는 음식물들이 많아지고 있다...  
   냉장고 관리를 할 수 있는 웹 어플케이션을 만들어 냉장고 관리를 해보자!
-### 간단한 기술스택
-- react, redux
-- redux-thunk (리덕스 미들웨어, 외부 통신)
-- dotenv (환경변수 관리)
-- firebase (데이터베이스 및 배포)
-- react-uuid (제품 고유의 키값 생성하기 위해 사용)
-- antd (UI/UX 프레임워크)
+### 기술스택
+- redux-thunk
+  - firebase를 통해서 데이터값을 가져오기 위해서는 비동기 작업을 해야하는데  
+    이때, 데이터를 스토어에 저장하기 위해 리덕스 미들웨어인 redux-thunk 사용
+- dotenv
+  - 외부에 노출되면 안되는 환경변수 관리를 위해 설치  
+  ex) API_KEY, APP_ID ....
+- firebase
+  - 사용자가 실시간 연동데이터(realtimeDatabase)를 사용해야함
+  - 사용자관리를 위해 firebaseAuth 구글로그인을 사용
+  - 배포를 하기 위해 firebase hosting 사용
+- react-uuid
+  - 냉장고에 품목 데이터를 추가할때 각각 품목을 구분하기 위한 uid를 생성할때 사용
+- antd
+  - 디자인이 없는 상황에서 안정적이고 완성도있는 UI를 사용하기 위해 선택
+  - UI관련 라이브러리중에서 디자인이 맘에 들어 사용
+  - 다른 UI라이브러리와 비교해서 비교적 설치방법이 쉬움
+  
 
 ## 폴더 트리 구조
 ```text
